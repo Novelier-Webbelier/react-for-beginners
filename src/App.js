@@ -2,43 +2,46 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [coins, setCoins] = useState([]);
-  const [userPrice, setUserPrice] = useState(100);
+  const [movies, setMovies] = useState([]);
 
-  useEffect(() => {
-    fetch("https://api.coinpaprika.com/v1/tickers")
-      .then((response) => response.json())
-      .then((json) => {
-        setCoins(json);
-        setLoading(false);
-      });
-  }, []);
+  const getMovies = async () => {
+    const json = await (
+      await fetch(
+      `https://yts.mx/api/v2/list_movies.json?minimum_rating=9&sort_by=year`
+      )
+    ).json();
 
-  const onChangeInput = (event) => {
-    setUserPrice(event.target.value);
+    setMovies(json.data.movies);
+    setLoading(false);
   }
 
-  return (
+  useEffect(() => {
+    getMovies();
+  }, []);
+
+  return(
     <div>
-      <h1>The Coins! {loading ? null : `(${coins.length})`}</h1>
-      {loading ? (
-        <strong>Loading...</strong>
-      ) : (
-        <div>
-          <input type={"number"} min={0} value={userPrice} onChange={onChangeInput} />
-          <ul>
-            {coins.map((coin, index) => {
-              if (userPrice >= coin.quotes.USD.price) {
-                return (
-                  <li key={index}>
-                    {coin.name} ({coin.symbol}) : ${coin.quotes.USD.price} USD
-                  </li>
-                );
-              }
+      {loading ? <h1>Loading...</h1> : <h1>Movies</h1>}
+      <div>
+        <ul>
+            {movies.map(movie => {
+              return (
+                <li key={movie.id}>
+                  <a href={movie.url}>
+                    <h2>{movie.title}</h2>
+                    <img src={movie.medium_cover_image} />
+                  </a>
+                  <p>{movie.summary}</p>
+                  <ul>
+                  {movie.genres.map(g => (
+                    <li key={g}>{g}</li>)
+                  )}
+                  </ul>
+                </li>
+              )
             })}
-          </ul>
-        </div>
-      )}
+        </ul>
+      </div>
     </div>
   );
 }
