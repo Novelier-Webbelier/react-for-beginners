@@ -1,49 +1,33 @@
 import { useState, useEffect } from "react";
 
+function Hello() {
+  function byeFunc() {
+    console.log("Bye :(");
+  }
+
+  function hiFunc() {
+    console.log("Hi :)");
+    return byeFunc;
+  }
+
+  useEffect(hiFunc, []);
+
+  return (
+    <h1>Hello</h1>
+  )
+}
+
 function App() {
-  const [counter, setCounter] = useState(0);
-  const [keyword, setKeyword] = useState("");
+  const [showing, setShowing] = useState(false);
 
-  const onClick = () => {
-    setCounter((prev) => prev + 1)
+  const onClickBtn = () => {
+    setShowing((prev) => !prev);
   }
-
-  const onChange = (event) => {
-    setKeyword(event.target.value);
-  }
-
-  console.log("I run all the time!");
-
-  useEffect(() => {
-    console.log("I run only once.");
-  }, []);
-
-  useEffect(() => {
-    // if (keyword !== "" && keyword.length > 5) {
-    //   console.log(`Search for ${keyword}`);
-    // }
-    console.log("I run when 'keyword' changes.");
-  }, [keyword])
-
-  useEffect(() => {
-    console.log("I run when 'counter' changes.");
-  }, [counter])
-
-  useEffect(() => {
-    console.log("I run when 'keyword' and 'counter' changes.");
-  }, [keyword, counter])
 
   return (
     <div>
-      <input
-        value={keyword}
-        onChange={onChange}
-        type="text"
-        placeholder="Search here..."
-      />
-
-      <h1>{counter}</h1>
-      <button onClick={onClick}>Click</button>
+      {showing ? <Hello /> : null}
+      <button onClick={onClickBtn}>{showing ? "Hide" : "Show"}</button>
     </div>
   );
 }
