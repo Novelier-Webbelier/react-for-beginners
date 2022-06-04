@@ -1,5 +1,7 @@
+import React from "react";
+
 function Detail() {
-  return <h1>Detail of the Movie</h1>;
+	return <h1>Detail of the Movie</h1>;
 }
 
 export default Detail;
